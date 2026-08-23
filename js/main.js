@@ -86,16 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Hero parallax bricks ---------- */
-  gsap.utils.toArray('.hb-row').forEach(row => {
-    const speed = parseFloat(row.dataset.speed) || 0.4;
-    gsap.to(row, {
-      y: () => -120 * speed,
-      ease: 'none',
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
-    });
-  });
-
   /* ---------- Stat counters ---------- */
   gsap.utils.toArray('.stat-num').forEach(el => {
     const target = parseFloat(el.dataset.count);
@@ -111,6 +101,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  /* ---------- Process: track + progress line animate with vertical scroll ---------- */
+  const processTrack = document.querySelector('.process-track');
+  const processPin = document.querySelector('.process-pin');
+  const progressFill = document.querySelector('.process-progress-fill');
+  if (processTrack && processPin) {
+    const getScrollAmount = () => Math.max(0, processTrack.scrollWidth - processPin.clientWidth);
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: '#process',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.6,
+        invalidateOnRefresh: true
+      }
+    })
+      .to(processTrack, { x: () => -getScrollAmount(), ease: 'none' }, 0)
+      .to(progressFill, { scaleX: 1, ease: 'none' }, 0);
+  }
 
   /* ---------- FAQ accordion ---------- */
   document.querySelectorAll('.faq-item').forEach(item => {

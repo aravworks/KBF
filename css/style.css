@@ -199,15 +199,6 @@ section{ position:relative; padding:120px 0; }
   100%{ transform:translateY(-420px) scale(1.6); opacity:0; }
 }
 
-.hero-bricks{ position:absolute; bottom:-40px; left:0; right:0; z-index:0; opacity:.5; }
-.hb-row{ display:flex; gap:10px; justify-content:center; margin-bottom:10px; will-change:transform; }
-.hb{
-  width:70px; height:32px; border-radius:4px;
-  background:linear-gradient(135deg,var(--gold-light),var(--clay));
-  box-shadow:inset 0 -4px 6px rgba(0,0,0,.15);
-}
-.hb-row:nth-child(2){ margin-left:38px; }
-
 .hero-inner{ position:relative; z-index:2; max-width:760px; padding-top:120px; }
 .hero-inner .eyebrow{ color:var(--gold-light); text-shadow:0 2px 10px rgba(0,0,0,.4); }
 .hero-title{ display:block; font-size:clamp(2.6rem,6vw,4.4rem); margin-bottom:22px; color:var(--sand); text-shadow:0 4px 24px rgba(0,0,0,.45); }
@@ -319,15 +310,12 @@ section{ position:relative; padding:120px 0; }
 #process .section-title{ color:var(--sand); }
 .process-head{ padding-bottom:12px; }
 .process-pin{
-  max-width:980px; margin:0 auto; padding:8px 28px 18px;
-  overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+  max-width:980px; margin:0 auto; padding:8px 28px 0;
+  overflow:hidden;
 }
-.process-pin::-webkit-scrollbar{ height:5px; }
-.process-pin::-webkit-scrollbar-track{ background:rgba(255,255,255,.06); border-radius:4px; }
-.process-pin::-webkit-scrollbar-thumb{ background:var(--clay); border-radius:4px; }
-.process-track{ display:flex; gap:20px; width:max-content; }
+.process-track{ display:flex; gap:20px; width:max-content; will-change:transform; }
 .process-step{
-  flex:0 0 auto; width:240px; scroll-snap-align:start;
+  flex:0 0 auto; width:240px;
   background:var(--glass); border:1px solid var(--line); border-radius:var(--radius); padding:30px 24px;
 }
 .step-num{
@@ -336,6 +324,15 @@ section{ position:relative; padding:120px 0; }
 }
 .process-step h3{ color:var(--sand); font-size:1.05rem; }
 .process-step p{ color:var(--text-soft); font-size:.88rem; margin:0; }
+
+.process-progress{
+  position:relative; height:3px; margin:28px 28px 0;
+  background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden;
+}
+.process-progress-fill{
+  position:absolute; inset:0; transform-origin:left; transform:scaleX(0);
+  background:linear-gradient(90deg,var(--gold),var(--clay));
+}
 
 /* ===================== Export / Map ===================== */
 .export-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
