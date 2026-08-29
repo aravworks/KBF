@@ -275,7 +275,6 @@ section{ position:relative; padding:120px 0; }
 .why-card p{ font-size:.9rem; margin:0; }
 
 /* ===================== Products ===================== */
-.product-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; margin-top:56px; }
 .product-card{
   background:var(--glass); border:1px solid var(--line); border-radius:var(--radius); padding:26px;
   transition:transform .4s var(--ease), box-shadow .4s var(--ease);
@@ -288,13 +287,7 @@ section{ position:relative; padding:120px 0; }
 .brick-3d{ width:88px; height:44px; border-radius:5px; position:relative; transition:transform .5s var(--ease); }
 .product-card:hover .brick-3d{ transform:rotateX(8deg) rotateZ(-3deg) translateY(-4px); }
 .brick-3d.clay{ background:linear-gradient(135deg,#c9663a,#8a3316); box-shadow:0 14px 24px -10px rgba(138,51,22,.6); }
-.brick-3d.flyash{ background:linear-gradient(135deg,#9a9088,#5c5450); box-shadow:0 14px 24px -10px rgba(60,55,50,.5); }
-.brick-3d.hollow{ background:linear-gradient(135deg,#d7935a,#a2551f); box-shadow:0 14px 24px -10px rgba(120,60,20,.5); }
-.brick-3d.hollow::before,.brick-3d.hollow::after{
-  content:''; position:absolute; top:10px; bottom:10px; width:14px; border-radius:3px; background:rgba(0,0,0,.18);
-}
-.brick-3d.hollow::before{ left:20px; } .brick-3d.hollow::after{ right:20px; }
-.brick-3d.paver{ background:linear-gradient(135deg,#e0a95c,#b5451b); box-shadow:0 14px 24px -10px rgba(150,80,20,.5); }
+.brick-3d.lg{ width:150px; height:74px; }
 .product-card h3{ font-size:1.1rem; margin-bottom:8px; color:var(--sand); }
 .product-card > p{ font-size:.88rem; }
 .spec-list{ margin-top:16px; border-top:1px solid var(--line); padding-top:14px; display:flex; flex-direction:column; gap:8px; }
@@ -303,6 +296,18 @@ section{ position:relative; padding:120px 0; }
 .spec-list li span:last-child{ font-weight:600; color:var(--sand); }
 .products-note{ text-align:center; margin-top:44px; font-size:.95rem; }
 .products-note a{ color:var(--gold-light); font-weight:600; border-bottom:1px solid currentColor; }
+
+.product-feature{
+  display:flex; gap:44px; align-items:center; padding:44px; max-width:820px; margin:0 auto;
+}
+.product-feature .product-visual{ flex:0 0 260px; height:220px; margin-bottom:0; }
+.product-feature-body{ flex:1; min-width:0; }
+.product-feature-body h3{ font-size:1.5rem; }
+.product-feature-body > p{ font-size:1rem; }
+@media (max-width:760px){
+  .product-feature{ flex-direction:column; padding:28px; }
+  .product-feature .product-visual{ width:100%; flex:none; }
+}
 
 /* ===================== Process (contained horizontal scroller) ===================== */
 #process{ background:#000; color:var(--sand); overflow:hidden; padding:100px 0; }
@@ -315,7 +320,7 @@ section{ position:relative; padding:120px 0; }
 }
 .process-track{ display:flex; gap:20px; width:max-content; will-change:transform; }
 .process-step{
-  flex:0 0 auto; width:240px;
+  flex:0 0 auto; width:260px;
   background:var(--glass); border:1px solid var(--line); border-radius:var(--radius); padding:30px 24px;
 }
 .step-num{
@@ -334,26 +339,19 @@ section{ position:relative; padding:120px 0; }
   background:linear-gradient(90deg,var(--gold),var(--clay));
 }
 
-/* ===================== Export / Map ===================== */
-.export-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+/* ===================== Export Info ===================== */
 .export-list{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px; }
+.export-list.centered{ max-width:700px; margin-left:auto; margin-right:auto; }
 .export-item{
   display:flex; align-items:center; gap:10px; font-weight:600; font-size:.95rem; color:var(--sand);
   background:var(--glass); border:1px solid var(--line); border-radius:12px; padding:12px 16px;
 }
 .flag-dot{ width:9px; height:9px; border-radius:50%; background:var(--gold-light); flex:none; }
-.route-map{ width:100%; color:rgba(244,237,225,.3); }
-.map-label{ font-size:11px; fill:var(--text-soft); font-family:'Inter',sans-serif; }
-.pulse-dot{ animation:pulseRing 2.4s ease-out infinite; transform-origin:360px 230px; }
-@keyframes pulseRing{ 0%{ opacity:.7; transform:scale(1);} 100%{ opacity:0; transform:scale(3.4);} }
-.route-path path{
-  fill:none; stroke:var(--gold); stroke-width:1.6; stroke-dasharray:6 6;
-  animation:dashMove 1.8s linear infinite;
-}
-@keyframes dashMove{ to{ stroke-dashoffset:-24; } }
 
-/* ===================== Certifications ===================== */
-.cert-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:56px; }
+/* ===================== Certifications / Company Info ===================== */
+.cert-grid,.info-grid{ display:grid; gap:24px; margin-top:56px; }
+.cert-grid{ grid-template-columns:repeat(3,1fr); }
+.info-grid{ grid-template-columns:repeat(4,1fr); }
 .cert-card{
   text-align:center; padding:34px 20px; border-radius:var(--radius); border:1px solid var(--line);
   background:var(--glass);
@@ -380,7 +378,6 @@ section{ position:relative; padding:120px 0; }
 .g3{ background:linear-gradient(150deg,#7a2d10,#d9723a); }
 .g4{ background:linear-gradient(150deg,#5c5450,#9a9088); }
 .g5{ background:linear-gradient(150deg,#9c3f1a,#e0a95c); }
-.g6{ background:linear-gradient(150deg,#4b2b1a,#b5451b); }
 
 /* ===================== Testimonials ===================== */
 .testi-track-wrap{ overflow:hidden; margin-top:50px; }
@@ -467,9 +464,8 @@ section{ position:relative; padding:120px 0; }
 
 /* ===================== Responsive ===================== */
 @media (max-width:1080px){
-  .why-grid,.product-grid{ grid-template-columns:repeat(2,1fr); }
-  .cert-grid{ grid-template-columns:repeat(2,1fr); }
-  .about-grid,.export-grid,.contact-grid{ grid-template-columns:1fr; gap:44px; }
+  .why-grid,.cert-grid,.info-grid{ grid-template-columns:repeat(2,1fr); }
+  .about-grid,.contact-grid{ grid-template-columns:1fr; gap:44px; }
   .stats-grid{ grid-template-columns:repeat(2,1fr); row-gap:34px; }
   .footer-grid{ grid-template-columns:1fr 1fr; }
   .gallery-grid{ grid-template-columns:repeat(2,1fr); }
@@ -481,7 +477,7 @@ section{ position:relative; padding:120px 0; }
   #nav-toggle{ display:flex; }
   .hero-inner{ padding-top:150px; }
   .form-row{ grid-template-columns:1fr; }
-  .why-grid,.product-grid,.cert-grid{ grid-template-columns:1fr; }
+  .why-grid,.cert-grid,.info-grid{ grid-template-columns:1fr; }
   .gallery-grid{ grid-template-columns:1fr; }
   .export-list{ grid-template-columns:1fr; }
   .footer-grid{ grid-template-columns:1fr; }

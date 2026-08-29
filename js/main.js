@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* Stagger children that share a parent + start point (cards, grids) */
-  document.querySelectorAll('.why-grid, .product-grid, .cert-grid, .gallery-grid, .export-list').forEach(group => {
+  document.querySelectorAll('.why-grid, .cert-grid, .info-grid, .gallery-grid, .export-list').forEach(group => {
     const items = group.querySelectorAll(':scope > .reveal-up');
     if (!items.length) return;
     gsap.set(items, { opacity: 0, y: 46 });
@@ -88,15 +88,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Stat counters ---------- */
   gsap.utils.toArray('.stat-num').forEach(el => {
+    if (!el.dataset.count) return; // static stats (e.g. a checkmark) skip the counter
     const target = parseFloat(el.dataset.count);
     const suffix = el.dataset.suffix || '';
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
     const obj = { val: 0 };
     ScrollTrigger.create({
       trigger: el, start: 'top 90%', once: true,
       onEnter: () => {
         gsap.to(obj, {
           val: target, duration: 1.8, ease: 'power2.out',
-          onUpdate: () => { el.textContent = Math.floor(obj.val) + suffix; }
+          onUpdate: () => {
+            el.textContent = (decimals ? obj.val.toFixed(decimals) : Math.floor(obj.val)) + suffix;
+          }
         });
       }
     });
@@ -142,9 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('quote-form');
   const status = document.getElementById('form-status');
   if (form) {
-    form.querySelectorAll('select').forEach(sel => {
-      sel.addEventListener('change', () => sel.classList.toggle('filled', !!sel.value));
-    });
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const btn = form.querySelector('.form-submit');
@@ -152,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
       status.textContent = '';
       setTimeout(() => {
         btn.classList.remove('loading');
-        status.textContent = "Thanks — your enquiry details are ready. Connect this form to an email service (e.g. Formspree) or a backend endpoint to actually send it.";
+        status.textContent = "Thanks! We've received your enquiry and will email you a formal quote shortly.";
         form.reset();
       }, 1100);
     });
