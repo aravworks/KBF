@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.body.style.overflow = 'hidden';
   // Safety fallback in case 'load' is slow/blocked
-  setTimeout(() => { if (!preloader.classList.contains('done')) { preloader.classList.add('done'); document.body.style.overflow=''; playHeroIntro(); } }, 4000);
+  setTimeout(() => { if (!preloader.classList.contains('done')) { preloader.classList.add('done'); document.body.style.overflow=''; ScrollTrigger.refresh(); playHeroIntro(); } }, 4000);
 
   /* ---------- Hero intro ---------- */
   function playHeroIntro() {
@@ -106,25 +106,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Process: track + progress line animate with vertical scroll ---------- */
+  /* ---------- Cursor tracking (internal/headless - not visible on frontend) ---------- */
+  window.cursorPosition = { x: 0, y: 0 };
+  window.addEventListener('mousemove', (e) => {
+    window.cursorPosition.x = e.clientX;
+    window.cursorPosition.y = e.clientY;
+  }, { passive: true });
+
+  /* ---------- Process: smooth horizontal scroll through 5 cards ---------- */
+  const processSection = document.getElementById('process');
   const processTrack = document.querySelector('.process-track');
   const processPin = document.querySelector('.process-pin');
   const progressFill = document.querySelector('.process-progress-fill');
-  if (processTrack && processPin) {
-    const getScrollAmount = () => Math.max(0, processTrack.scrollWidth - processPin.clientWidth);
+
+  if (processSection && processTrack && processPin) {
+    // Add offset so card 5 clears the container padding and isn't cut off on the right
+    const getScrollAmount = () => Math.max(0, processTrack.scrollWidth - processPin.clientWidth + 80);
+
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: processPin,
+        trigger: processSection,
         start: 'top top',
-        end: () => "+=" + getScrollAmount(),
-        pin: true,
-        scrub: 1,
+        end: 'bottom bottom',
+        scrub: 0.5,
         invalidateOnRefresh: true,
-        anticipatePin: 1
+        onUpdate: (self) => {
+          if (progressFill) {
+            // Reaches 100% when card 5 fully arrives (at 80% of total scroll)
+            progressFill.style.transform = `scaleX(${Math.min(1, self.progress / 0.8)})`;
+          }
+        }
       }
     });
-    tl.to(processTrack, { x: () => -getScrollAmount(), ease: 'none' }, 0);
-    tl.to(progressFill, { scaleX: 1, ease: 'none' }, 0);
+
+    // Animate across cards to card 5 across the first 80% of scroll
+    tl.to(processTrack, {
+      x: () => -getScrollAmount(),
+      ease: 'none',
+      duration: 0.8
+    }, 0);
+
+    // Subtle gap: hold card 5 resting firmly in view for the final 20% so it cannot be scrolled away too quickly
+    tl.to({}, { duration: 0.2 });
   }
 
   /* ---------- FAQ accordion ---------- */

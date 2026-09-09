@@ -317,18 +317,45 @@ section{ position:relative; padding:120px 0; }
 }
 
 /* ===================== Process (contained horizontal scroller) ===================== */
-#process{ background:#000; color:var(--sand); padding:100px 0; }
+#process{
+  position:relative;
+  height:360vh;
+  background:#090604;
+  color:var(--sand);
+  padding:0;
+  box-sizing:border-box;
+}
+.process-sticky{
+  position:sticky;
+  top:0;
+  height:100vh;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+  box-sizing:border-box;
+  padding:40px 0;
+  background:#090604;
+}
 #process .eyebrow{ color:var(--gold-light); }
 #process .section-title{ color:var(--sand); }
-.process-head{ padding-bottom:12px; }
+.process-head{ padding-bottom:16px; text-align:center; }
 .process-pin{
-  max-width:980px; margin:0 auto; padding:8px 28px 0;
-  overflow:hidden;
+  max-width:1180px; width:100%; margin:0 auto; padding:8px 32px 0;
+  overflow:hidden; box-sizing:border-box;
 }
-.process-track{ display:flex; gap:20px; width:max-content; will-change:transform; }
+.process-track{ display:flex; gap:24px; width:max-content; will-change:transform; padding:10px 48px 16px 0; }
 .process-step{
-  flex:0 0 auto; width:260px;
-  background:var(--glass); border:1px solid var(--line); border-radius:var(--radius); padding:30px 24px;
+  flex:0 0 auto; width:280px;
+  background:var(--glass); border:1px solid var(--line); border-radius:var(--radius); padding:32px 24px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:border-color .3s ease, transform .3s ease;
+  box-sizing:border-box;
+}
+.process-step:hover{
+  border-color:rgba(217,162,75,0.4);
+  transform:translateY(-4px);
 }
 .step-num{
   display:inline-block; font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--gold-light);
@@ -338,7 +365,7 @@ section{ position:relative; padding:120px 0; }
 .process-step p{ color:var(--text-soft); font-size:.88rem; margin:0; }
 
 .process-progress{
-  position:relative; height:3px; margin:28px 28px 0;
+  position:relative; height:3px; max-width:600px; margin:28px auto 0;
   background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden;
 }
 .process-progress-fill{
@@ -371,7 +398,7 @@ section{ position:relative; padding:120px 0; }
 
 /* ===================== Gallery ===================== */
 .gallery-note{ font-size:.88rem; margin-top:-30px; margin-bottom:40px; opacity:.75; }
-.gallery-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:18px; }
+.gallery-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:18px; margin-top:40px; }
 .gallery-item.g1, .gallery-item.g2, .gallery-item.g3 { grid-column: span 2; }
 .gallery-item.g4, .gallery-item.g5 { grid-column: span 3; }
 .gallery-item{
