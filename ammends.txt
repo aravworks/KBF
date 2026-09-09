@@ -25,3 +25,55 @@ Phone and mail to be used for Tanjeet contact.
 Kiln location : Kalyanpur kanpur uttar pradesh IN. 
 Removed product interested in contact form. Add phone number, city and country to be collected. 
 Add another section containing company information: GSTIN, the export license. 
+
+08/09/26 updates to be done :
+
+2 contact cards. tanjeet singh
+tanjeet: instagram handle(https://www.instagram.com/tanjeetxsingh/), tanjeetsingh30@gmail.com
+more from the owner section to update content such as gallery and all...
+
+how to identify the quality of bricks (also to be updated in the products section) where currently red bricks are stated. the content mentioned should only be related to what is provided in this doc nothing else, edit red bricks accordingly. 
+
+1st class bricks:
+- dark red in colour 
+- good shape
+- firm mark clearly visible 
+- high strength
+- perfect for walls and other construction uses 
+- will increase the cost of construction
+- mostly used for construction of Personal Houses
+
+2nd class brikcs
+- light red in colour 
+- good shape 
+- strength lower than 1st class 
+- good for wall and other construction uses
+- will make cost of construction slightly affordable 
+- mostly used by builders
+
+Seedha khanjar Bricks 
+- Dark Red/Slightly Black in Shape
+- Slightly overcooked bricks 
+- Slightly compressed in shape
+- Very high strength
+- perfect for walls and other construction uses
+- will cost slightly less than 1st class bricks 
+- Mostly Used by Builders and For personal homes for the Basement 
+
+Tedha Khanjar Bricks 
+- Dark Red/ Black in colour 
+- Overcooked Bricks 
+- Highly Compressed in Shape 
+- Very High in Strength 
+- perfect for Floor use and Brickova
+- Cheaper than other bricks 
+
+
+GSTIN: 09ASQPS9037F1Z1
+IEC Number: 
+
+remove export ready from everywhere. 
+fix the glitches in our manufacturing process horizontal scroll speed to be increased. 
+Quality you can see and hear to be removed completely. 
+Quality check : sound and color should be different blocks. Sound should specify metalic sounds, every brick. 
+The website should seem symmetrical especially the blocks in the gallery sections. 

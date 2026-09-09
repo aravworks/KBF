@@ -112,17 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressFill = document.querySelector('.process-progress-fill');
   if (processTrack && processPin) {
     const getScrollAmount = () => Math.max(0, processTrack.scrollWidth - processPin.clientWidth);
-    gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: '#process',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 0.6,
-        invalidateOnRefresh: true
+        trigger: processPin,
+        start: 'top top',
+        end: () => "+=" + getScrollAmount(),
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        anticipatePin: 1
       }
-    })
-      .to(processTrack, { x: () => -getScrollAmount(), ease: 'none' }, 0)
-      .to(progressFill, { scaleX: 1, ease: 'none' }, 0);
+    });
+    tl.to(processTrack, { x: () => -getScrollAmount(), ease: 'none' }, 0);
+    tl.to(progressFill, { scaleX: 1, ease: 'none' }, 0);
   }
 
   /* ---------- FAQ accordion ---------- */
@@ -142,7 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Contact form (front-end only demo) ---------- */
+  /* ---------- Contact form → Google Sheets ---------- */
+  const SHEET_URL =
+    "https://script.google.com/macros/s/AKfycbwTWYr-ubFtn5p_W2ZadmtAcWLifnvthMh4LCxloiOFEjnoTQ8RfFlAICSDB8LfAov7/exec";
   const form = document.getElementById('quote-form');
   const status = document.getElementById('form-status');
   if (form) {
@@ -151,11 +155,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = form.querySelector('.form-submit');
       btn.classList.add('loading');
       status.textContent = '';
-      setTimeout(() => {
+      status.style.color = 'var(--gold-light)';
+
+      const data = {
+        name: form.name.value,
+        company: form.company.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        city: form.city.value,
+        country: form.country.value,
+        volume: form.volume.value,
+        message: form.message.value,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
         btn.classList.remove('loading');
         status.textContent = "Thanks! We've received your enquiry and will email you a formal quote shortly.";
         form.reset();
-      }, 1100);
+      })
+      .catch(() => {
+        btn.classList.remove('loading');
+        status.style.color = '#ff6b6b';
+        status.textContent = "Something went wrong. Please try again or email us directly.";
+      });
     });
   }
 
