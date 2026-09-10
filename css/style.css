@@ -415,18 +415,6 @@ section{ position:relative; padding:120px 0; }
 .g4{ background:linear-gradient(150deg,#5c5450,#9a9088); }
 .g5{ background:linear-gradient(150deg,#9c3f1a,#e0a95c); }
 
-/* ===================== Testimonials ===================== */
-.testi-track-wrap{ overflow:hidden; margin-top:50px; }
-.testi-track{ display:flex; gap:24px; justify-content:center; flex-wrap:wrap; }
-.testi-card{
-  flex:0 0 auto; width:min(86vw,380px); background:var(--glass); border-radius:var(--radius); padding:32px;
-  border:1px solid var(--line);
-}
-.testi-card p{ font-size:1rem; color:var(--sand); font-style:italic; }
-.testi-who{ display:flex; flex-direction:column; margin-top:16px; }
-.testi-who strong{ font-size:.92rem; color:var(--sand); }
-.testi-who span{ font-size:.8rem; color:var(--text-faint); }
-
 /* ===================== FAQ ===================== */
 .faq-wrap{ max-width:800px; }
 .faq-list{ margin-top:40px; display:flex; flex-direction:column; gap:12px; }
