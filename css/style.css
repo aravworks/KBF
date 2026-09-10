@@ -254,10 +254,13 @@ section{ position:relative; padding:120px 0; }
 .about-frame{
   aspect-ratio:1/1; border-radius:28px; background:var(--glass); border:1px solid var(--line);
   display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); overflow:hidden;
+  position:relative;
 }
-.kiln-illustration{ width:78%; }
-.kiln-glow{ animation:glowPulse 2.4s ease-in-out infinite; transform-origin:center; }
-@keyframes glowPulse{ 0%,100%{ opacity:.75; transform:scale(1);} 50%{ opacity:1; transform:scale(1.08);} }
+.about-img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .7s var(--ease);
+}
+.about-frame:hover .about-img{ transform:scale(1.04); }
 .about-points{ margin-top:22px; display:flex; flex-direction:column; gap:12px; }
 .about-points li{ display:flex; gap:10px; align-items:flex-start; font-size:.96rem; color:var(--text-soft); }
 .pt-icon{
@@ -405,12 +408,17 @@ section{ position:relative; padding:120px 0; }
   position:relative; height:230px; border-radius:16px; overflow:hidden;
   display:flex; align-items:flex-end; padding:18px; font-weight:600; color:#fff; font-size:.9rem;
   background:linear-gradient(150deg,var(--clay-dark),var(--clay));
-  transition:transform .5s var(--ease);
+  border:1px solid var(--line);
+  transition:transform .5s var(--ease), box-shadow .5s var(--ease);
 }
-.gallery-item::after{ content:''; position:absolute; inset:0; background:linear-gradient(0deg,rgba(0,0,0,.45),transparent 60%); }
-.gallery-item span{ position:relative; z-index:1; }
-.gallery-item:hover{ transform:scale(1.03); }
-.g2{ background:linear-gradient(150deg,#8a5a3a,#c9663a); }
+.gallery-item::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.2) 50%,transparent 80%);
+}
+.gallery-item span{ position:relative; z-index:1; text-shadow:0 1px 3px rgba(0,0,0,.6); }
+.gallery-item:hover{ transform:scale(1.03); box-shadow:var(--shadow); }
+.g1{ background:url('../assets/IMG_0012.jpeg') center/cover no-repeat; }
+.g2{ background:url('../assets/IMG_0013.jpeg') center/cover no-repeat; }
 .g3{ background:linear-gradient(150deg,#7a2d10,#d9723a); }
 .g4{ background:linear-gradient(150deg,#5c5450,#9a9088); }
 .g5{ background:linear-gradient(150deg,#9c3f1a,#e0a95c); }
