@@ -226,23 +226,185 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://script.google.com/macros/s/AKfycbwTWYr-ubFtn5p_W2ZadmtAcWLifnvthMh4LCxloiOFEjnoTQ8RfFlAICSDB8LfAov7/exec";
   const form = document.getElementById("quote-form");
   const status = document.getElementById("form-status");
+
+  // Country to City dropdown dictionary
+  const CITIES_BY_COUNTRY = {
+    India: [
+      "Kanpur",
+      "Lucknow",
+      "Unnao",
+      "Prayagraj (Allahabad)",
+      "Varanasi",
+      "Agra",
+      "Noida / Greater Noida",
+      "Ghaziabad",
+      "Delhi / NCR",
+      "Bareilly",
+      "Meerut",
+      "Gorakhpur",
+      "Jhansi",
+      "Aligarh",
+      "Ayodhya",
+      "Mumbai",
+      "Bengaluru",
+      "Kolkata",
+      "Hyderabad",
+      "Ahmedabad",
+      "Chennai",
+      "Jaipur",
+      "Chandigarh",
+      "Patna",
+      "Other City (India)"
+    ],
+    "United Arab Emirates": [
+      "Dubai",
+      "Abu Dhabi",
+      "Sharjah",
+      "Ajman",
+      "Ras Al Khaimah",
+      "Fujairah",
+      "Umm Al Quwain",
+      "Other (UAE)"
+    ],
+    "Saudi Arabia": [
+      "Riyadh",
+      "Jeddah",
+      "Dammam",
+      "Mecca",
+      "Medina",
+      "Khobar",
+      "Tabuk",
+      "Other (Saudi Arabia)"
+    ],
+    Qatar: ["Doha", "Al Rayyan", "Al Wakrah", "Al Khor", "Other (Qatar)"],
+    Oman: ["Muscat", "Salalah", "Sohar", "Nizwa", "Other (Oman)"],
+    Kuwait: ["Kuwait City", "Al Ahmadi", "Hawalli", "Salmiya", "Other (Kuwait)"],
+    Bahrain: ["Manama", "Riffa", "Muharraq", "Hamad Town", "Other (Bahrain)"],
+    "United States": ["New York", "Los Angeles", "Chicago", "Houston", "Other (USA)"],
+    "United Kingdom": ["London", "Birmingham", "Manchester", "Glasgow", "Other (UK)"],
+    Canada: ["Toronto", "Vancouver", "Montreal", "Calgary", "Other (Canada)"],
+    Australia: ["Sydney", "Melbourne", "Brisbane", "Perth", "Other (Australia)"],
+    Other: ["Major City", "Other International City"]
+  };
+
+  const countrySelect = document.getElementById("country");
+  const citySelect = document.getElementById("city");
+
+  function populateCities(country) {
+    if (!citySelect) return;
+    citySelect.innerHTML = '<option value="" disabled selected hidden>Select City</option>';
+    const cities = CITIES_BY_COUNTRY[country] || ["Other City"];
+    cities.forEach((city) => {
+      const opt = document.createElement("option");
+      opt.value = city;
+      opt.textContent = city;
+      citySelect.appendChild(opt);
+    });
+    citySelect.disabled = false;
+  }
+
+  if (countrySelect && citySelect) {
+    // Default to India
+    countrySelect.value = "India";
+    populateCities("India");
+    citySelect.value = "Kanpur";
+
+    countrySelect.addEventListener("change", () => {
+      populateCities(countrySelect.value);
+    });
+  }
+
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Reset previous error indicators
+      form.querySelectorAll(".form-field").forEach((f) => f.classList.remove("has-error"));
+      status.textContent = "";
+
+      const name = (form.name.value || "").trim();
+      const company = (form.company.value || "").trim();
+      const email = (form.email.value || "").trim();
+      const phone = (form.phone.value || "").trim();
+      const country = (form.country.value || "").trim();
+      const city = (form.city.value || "").trim();
+      const volumeStr = (form.volume.value || "").trim();
+      const message = (form.message.value || "").trim();
+
+      const setError = (fieldId, msg) => {
+        const input = document.getElementById(fieldId);
+        if (input) {
+          input.closest(".form-field").classList.add("has-error");
+          input.focus();
+        }
+        status.style.color = "#ff6b6b";
+        status.textContent = msg;
+      };
+
+      // 1. Full Name validation (min 2, max 60, letters/spaces/punctuation)
+      if (name.length < 2 || name.length > 60 || !/^[a-zA-Z\s.'-]+$/.test(name)) {
+        setError("name", "Please enter a valid full name (letters and spaces only).");
+        return;
+      }
+
+      // 2. Company validation (max 80)
+      if (company.length > 80) {
+        setError("company", "Company name cannot exceed 80 characters.");
+        return;
+      }
+
+      // 3. Email validation (RFC standard)
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!email || !emailRegex.test(email) || email.length > 80) {
+        setError("email", "Please provide a valid email address (e.g. name@domain.com).");
+        return;
+      }
+
+      // 4. Phone validation (international standard, 7 to 15 digits)
+      const digitsOnly = phone.replace(/[^0-9]/g, "");
+      if (digitsOnly.length < 7 || digitsOnly.length > 15 || !/^\+?[0-9\s\-]{7,16}$/.test(phone)) {
+        setError("phone", "Please provide a valid phone number with country code (7 to 15 digits).");
+        return;
+      }
+
+      // 5. Country and City validation
+      if (!country) {
+        setError("country", "Please select your country.");
+        return;
+      }
+      if (!city) {
+        setError("city", "Please select your city.");
+        return;
+      }
+
+      // 6. Volume validation (strictly an integer >= 100)
+      const volumeInt = parseInt(volumeStr, 10);
+      if (!Number.isInteger(volumeInt) || volumeInt < 100 || volumeInt > 10000000) {
+        setError("volume", "Please enter a valid estimated volume (minimum 100 bricks).");
+        return;
+      }
+
+      // 7. Message validation (max 500 chars)
+      if (message.length > 500) {
+        setError("message", "Project description cannot exceed 500 characters.");
+        return;
+      }
+
+      // Validation passed - proceed with submission
       const btn = form.querySelector(".form-submit");
       btn.classList.add("loading");
-      status.textContent = "";
       status.style.color = "var(--gold-light)";
+      status.textContent = "Submitting your enquiry...";
 
       const data = {
-        name: form.name.value,
-        company: form.company.value,
-        email: form.email.value,
-        phone: form.phone.value,
-        city: form.city.value,
-        country: form.country.value,
-        volume: form.volume.value,
-        message: form.message.value,
+        name,
+        company: company || "N/A",
+        email,
+        phone,
+        city,
+        country,
+        volume: volumeInt, // Actual integer transmitted
+        message: message || "N/A",
         timestamp: new Date().toISOString(),
       };
 
@@ -254,9 +416,15 @@ document.addEventListener("DOMContentLoaded", () => {
       })
         .then(() => {
           btn.classList.remove("loading");
+          status.style.color = "var(--gold-light)";
           status.textContent =
             "Thanks! We've received your enquiry and will email you a formal quote shortly.";
           form.reset();
+          if (countrySelect && citySelect) {
+            countrySelect.value = "India";
+            populateCities("India");
+            citySelect.value = "Kanpur";
+          }
         })
         .catch(() => {
           btn.classList.remove("loading");
@@ -264,6 +432,19 @@ document.addEventListener("DOMContentLoaded", () => {
           status.textContent =
             "Something went wrong. Please try again or email us directly.";
         });
+    });
+
+    // Clear error highlights as user modifies inputs
+    form.querySelectorAll("input, select, textarea").forEach((el) => {
+      el.addEventListener("input", () => {
+        el.closest(".form-field").classList.remove("has-error");
+        if (status.style.color === "rgb(255, 107, 107)" || status.style.color === "#ff6b6b") {
+          status.textContent = "";
+        }
+      });
+      el.addEventListener("change", () => {
+        el.closest(".form-field").classList.remove("has-error");
+      });
     });
   }
 
