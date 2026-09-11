@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="css/style.css?v=2.6">
+<link rel="stylesheet" href="css/style.css?v=2.7">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%23b5451b%22/><rect x=%2218%22 y=%2242%22 width=%2264%22 height=%2224%22 rx=%223%22 fill=%22%23f4ede1%22/></svg>">
 </head>
@@ -419,12 +419,12 @@
       <form class="contact-form reveal-right" id="quote-form">
         <div class="form-row">
           <div class="form-field">
-            <input type="text" id="name" name="name" required minlength="2" maxlength="60" pattern="^[a-zA-Z\s.'-]+$" title="Please enter a valid name" placeholder=" ">
+            <input type="text" id="name" name="name" required minlength="2" maxlength="60" pattern="^[a-zA-Z\s.'-]+$" title="Please enter your full name" placeholder=" ">
             <label for="name">Full Name *</label>
           </div>
           <div class="form-field">
             <input type="text" id="company" name="company" maxlength="80" placeholder=" ">
-            <label for="company">Company / Firm (Optional)</label>
+            <label for="company">Company (Optional)</label>
           </div>
         </div>
         <div class="form-row">
@@ -434,42 +434,30 @@
           </div>
           <div class="form-field">
             <input type="tel" id="phone" name="phone" required minlength="7" maxlength="16" pattern="^\+?[0-9\s\-]{7,16}$" title="Please enter a valid phone number (e.g. +91 9876543210)" placeholder=" ">
-            <label for="phone">Phone Number (with Country Code) *</label>
+            <label for="phone">Phone Number *</label>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-field">
-            <select id="country" name="country" required class="filled">
-              <option value="" disabled selected hidden></option>
-              <option value="India">India</option>
-              <option value="United Arab Emirates">United Arab Emirates</option>
-              <option value="Saudi Arabia">Saudi Arabia</option>
-              <option value="Qatar">Qatar</option>
-              <option value="Oman">Oman</option>
-              <option value="Kuwait">Kuwait</option>
-              <option value="Bahrain">Bahrain</option>
-              <option value="United States">United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Canada">Canada</option>
-              <option value="Australia">Australia</option>
-              <option value="Other">Other Country</option>
-            </select>
-            <label for="country" class="select-label">Country *</label>
+          <div class="form-field combobox-field" id="country-combobox">
+            <input type="text" id="country" name="country" required maxlength="60" autocomplete="off" placeholder=" ">
+            <label for="country">Country *</label>
+            <svg class="combobox-chevron" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            <ul class="combobox-dropdown" id="country-dropdown"></ul>
           </div>
-          <div class="form-field">
-            <select id="city" name="city" required class="filled">
-              <option value="" disabled selected hidden></option>
-            </select>
-            <label for="city" class="select-label">City *</label>
+          <div class="form-field combobox-field" id="city-combobox">
+            <input type="text" id="city" name="city" required maxlength="60" autocomplete="off" placeholder=" ">
+            <label for="city">City *</label>
+            <svg class="combobox-chevron" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            <ul class="combobox-dropdown" id="city-dropdown"></ul>
           </div>
         </div>
         <div class="form-field">
           <input type="number" id="volume" name="volume" required min="100" max="10000000" step="1" placeholder=" ">
-          <label for="volume">Estimated Volume (Number of Bricks) *</label>
+          <label for="volume">Estimated Volume (Bricks) *</label>
         </div>
         <div class="form-field">
           <textarea id="message" name="message" rows="3" maxlength="500" placeholder=" "></textarea>
-          <label for="message">Project Details / Requirements (Optional, max 500 chars)</label>
+          <label for="message">Project Details (Optional)</label>
         </div>
         <button type="submit" class="btn btn-primary btn-lg form-submit">
           <span class="btn-label">Send Enquiry</span>
@@ -520,6 +508,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="js/main.js?v=2.6"></script>
+<script src="js/main.js?v=2.7"></script>
 </body>
 </html>

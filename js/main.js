@@ -221,13 +221,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---------- Contact form → Google Sheets ---------- */
+  /* ---------- Contact form → Searchable Comboboxes & Validation ---------- */
   const SHEET_URL =
     "https://script.google.com/macros/s/AKfycbwTWYr-ubFtn5p_W2ZadmtAcWLifnvthMh4LCxloiOFEjnoTQ8RfFlAICSDB8LfAov7/exec";
   const form = document.getElementById("quote-form");
   const status = document.getElementById("form-status");
 
-  // Country to City dropdown dictionary
+  // Comprehensive Country list
+  const COUNTRIES = [
+    "India",
+    "United Arab Emirates",
+    "Saudi Arabia",
+    "Qatar",
+    "Oman",
+    "Kuwait",
+    "Bahrain",
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "Singapore",
+    "Malaysia",
+    "Germany",
+    "France",
+    "Italy",
+    "Spain",
+    "Netherlands",
+    "South Africa",
+    "Nepal",
+    "Bangladesh",
+    "Sri Lanka",
+    "Other Country (Type your own)"
+  ];
+
+  // Dynamic Cities per Country
   const CITIES_BY_COUNTRY = {
     India: [
       "Kanpur",
@@ -245,16 +272,23 @@ document.addEventListener("DOMContentLoaded", () => {
       "Jhansi",
       "Aligarh",
       "Ayodhya",
+      "Mathura",
+      "Moradabad",
+      "Saharanpur",
       "Mumbai",
+      "Pune",
       "Bengaluru",
       "Kolkata",
       "Hyderabad",
       "Ahmedabad",
+      "Surat",
       "Chennai",
       "Jaipur",
       "Chandigarh",
       "Patna",
-      "Other City (India)"
+      "Bhopal",
+      "Indore",
+      "Other City (Type your own)"
     ],
     "United Arab Emirates": [
       "Dubai",
@@ -264,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "Ras Al Khaimah",
       "Fujairah",
       "Umm Al Quwain",
-      "Other (UAE)"
+      "Other City (UAE)"
     ],
     "Saudi Arabia": [
       "Riyadh",
@@ -274,46 +308,159 @@ document.addEventListener("DOMContentLoaded", () => {
       "Medina",
       "Khobar",
       "Tabuk",
-      "Other (Saudi Arabia)"
+      "Jubail",
+      "Other City (Saudi Arabia)"
     ],
-    Qatar: ["Doha", "Al Rayyan", "Al Wakrah", "Al Khor", "Other (Qatar)"],
-    Oman: ["Muscat", "Salalah", "Sohar", "Nizwa", "Other (Oman)"],
-    Kuwait: ["Kuwait City", "Al Ahmadi", "Hawalli", "Salmiya", "Other (Kuwait)"],
-    Bahrain: ["Manama", "Riffa", "Muharraq", "Hamad Town", "Other (Bahrain)"],
-    "United States": ["New York", "Los Angeles", "Chicago", "Houston", "Other (USA)"],
-    "United Kingdom": ["London", "Birmingham", "Manchester", "Glasgow", "Other (UK)"],
-    Canada: ["Toronto", "Vancouver", "Montreal", "Calgary", "Other (Canada)"],
-    Australia: ["Sydney", "Melbourne", "Brisbane", "Perth", "Other (Australia)"],
-    Other: ["Major City", "Other International City"]
+    Qatar: ["Doha", "Al Rayyan", "Al Wakrah", "Al Khor", "Other City (Qatar)"],
+    Oman: ["Muscat", "Salalah", "Sohar", "Nizwa", "Other City (Oman)"],
+    Kuwait: ["Kuwait City", "Al Ahmadi", "Hawalli", "Salmiya", "Other City (Kuwait)"],
+    Bahrain: ["Manama", "Riffa", "Muharraq", "Hamad Town", "Other City (Bahrain)"],
+    "United States": ["New York", "Los Angeles", "Chicago", "Houston", "Dallas", "Miami", "San Francisco", "Other City (USA)"],
+    "United Kingdom": ["London", "Birmingham", "Manchester", "Glasgow", "Leeds", "Other City (UK)"],
+    Canada: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Other City (Canada)"],
+    Australia: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Other City (Australia)"],
+    Other: ["Major City", "Other International City (Type your own)"]
   };
 
-  const countrySelect = document.getElementById("country");
-  const citySelect = document.getElementById("city");
+  const countryInput = document.getElementById("country");
+  const countryWrap = document.getElementById("country-combobox");
+  const countryDropdown = document.getElementById("country-dropdown");
 
-  function populateCities(country) {
-    if (!citySelect) return;
-    citySelect.innerHTML = '<option value="" disabled selected hidden>Select City</option>';
-    const cities = CITIES_BY_COUNTRY[country] || ["Other City"];
-    cities.forEach((city) => {
-      const opt = document.createElement("option");
-      opt.value = city;
-      opt.textContent = city;
-      citySelect.appendChild(opt);
-    });
-    citySelect.disabled = false;
+  const cityInput = document.getElementById("city");
+  const cityWrap = document.getElementById("city-combobox");
+  const cityDropdown = document.getElementById("city-dropdown");
+
+  function getCitiesForCurrentCountry() {
+    const c = (countryInput ? countryInput.value : "").trim();
+    return CITIES_BY_COUNTRY[c] || CITIES_BY_COUNTRY["Other"];
   }
 
-  if (countrySelect && citySelect) {
-    // Default to India
-    countrySelect.value = "India";
-    populateCities("India");
-    citySelect.value = "Kanpur";
+  // Setup generic filter-as-you-type combobox
+  function setupCombobox(wrap, input, dropdown, getList, onSelect) {
+    if (!wrap || !input || !dropdown) return;
 
-    countrySelect.addEventListener("change", () => {
-      populateCities(countrySelect.value);
+    function render(filter = "") {
+      const q = filter.trim().toLowerCase();
+      const list = getList();
+      const matches = q
+        ? list.filter((item) => item.toLowerCase().includes(q))
+        : list;
+
+      dropdown.innerHTML = "";
+
+      if (!matches.length) {
+        const emptyLi = document.createElement("li");
+        emptyLi.className = "combobox-item other-item";
+        emptyLi.textContent = `Use "${filter}" (Type custom name)`;
+        emptyLi.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          select(filter);
+        });
+        dropdown.appendChild(emptyLi);
+      } else {
+        matches.forEach((item) => {
+          const li = document.createElement("li");
+          li.className = "combobox-item";
+          if (item.toLowerCase().includes("other")) {
+            li.classList.add("other-item");
+          }
+          li.textContent = item;
+          li.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            select(item);
+          });
+          dropdown.appendChild(li);
+        });
+      }
+
+      wrap.classList.add("open");
+    }
+
+    function select(item) {
+      if (item.toLowerCase().includes("other") && item.toLowerCase().includes("type")) {
+        // User clicked "Other (Type your own)" -> clear to allow free typing
+        input.value = "";
+        input.placeholder = "Type your custom " + (input.id === "country" ? "country" : "city");
+        input.focus();
+      } else {
+        input.value = item;
+        input.placeholder = " ";
+      }
+      wrap.classList.remove("open");
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      if (onSelect) onSelect(input.value);
+    }
+
+    input.addEventListener("focus", () => {
+      render(input.value);
     });
+
+    input.addEventListener("input", () => {
+      render(input.value);
+    });
+
+    input.addEventListener("blur", () => {
+      setTimeout(() => wrap.classList.remove("open"), 180);
+    });
+
+    const chevron = wrap.querySelector(".combobox-chevron");
+    if (chevron) {
+      chevron.style.cursor = "pointer";
+      chevron.style.pointerEvents = "auto";
+      chevron.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (wrap.classList.contains("open")) {
+          wrap.classList.remove("open");
+        } else {
+          input.focus();
+          render(input.value);
+        }
+      });
+    }
   }
 
+  // Initialize Searchable Dropdowns
+  if (countryInput && cityInput) {
+    // Defaults: India & Kanpur
+    countryInput.value = "India";
+    cityInput.value = "Kanpur";
+
+    setupCombobox(
+      countryWrap,
+      countryInput,
+      countryDropdown,
+      () => COUNTRIES,
+      (selectedCountry) => {
+        // When country changes, clear city and show relevant suggestions
+        cityInput.value = "";
+        cityInput.placeholder = "Type or select city";
+        cityInput.focus();
+      }
+    );
+
+    setupCombobox(
+      cityWrap,
+      cityInput,
+      cityDropdown,
+      getCitiesForCurrentCountry
+    );
+  }
+
+  // Floating label helper to keep labels consistently elevated when inputs contain values
+  function updateFloatingLabels() {
+    form?.querySelectorAll(".form-field input, .form-field textarea").forEach((el) => {
+      const parent = el.closest(".form-field");
+      if (el.value.trim().length > 0) {
+        parent?.classList.add("has-value");
+      } else {
+        parent?.classList.remove("has-value");
+      }
+    });
+  }
+  form?.addEventListener("input", updateFloatingLabels);
+  updateFloatingLabels();
+
+  // Form submission handler
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -368,12 +515,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // 5. Country and City validation
-      if (!country) {
-        setError("country", "Please select your country.");
+      if (!country || country.toLowerCase().includes("select country")) {
+        setError("country", "Please enter or select your country.");
         return;
       }
-      if (!city) {
-        setError("city", "Please select your city.");
+      if (!city || city.toLowerCase().includes("select city")) {
+        setError("city", "Please enter or select your city.");
         return;
       }
 
@@ -403,7 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
         phone,
         city,
         country,
-        volume: volumeInt, // Actual integer transmitted
+        volume: volumeInt, // Sent as pure integer
         message: message || "N/A",
         timestamp: new Date().toISOString(),
       };
@@ -420,11 +567,11 @@ document.addEventListener("DOMContentLoaded", () => {
           status.textContent =
             "Thanks! We've received your enquiry and will email you a formal quote shortly.";
           form.reset();
-          if (countrySelect && citySelect) {
-            countrySelect.value = "India";
-            populateCities("India");
-            citySelect.value = "Kanpur";
+          if (countryInput && cityInput) {
+            countryInput.value = "India";
+            cityInput.value = "Kanpur";
           }
+          updateFloatingLabels();
         })
         .catch(() => {
           btn.classList.remove("loading");
@@ -441,9 +588,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (status.style.color === "rgb(255, 107, 107)" || status.style.color === "#ff6b6b") {
           status.textContent = "";
         }
-      });
-      el.addEventListener("change", () => {
-        el.closest(".form-field").classList.remove("has-error");
       });
     });
   }

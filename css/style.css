@@ -466,32 +466,54 @@ section{ position:relative; padding:120px 0; scroll-margin-top:80px; }
 .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
 .form-field{ position:relative; margin-bottom:20px; }
 .form-field input, .form-field select, .form-field textarea{
-  width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); border-radius:10px;
-  padding:16px 14px 8px; color:var(--sand); font-size:.95rem; font-family:inherit; outline:none;
-  transition:border-color .3s;
+  width:100%; height:54px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); border-radius:10px;
+  padding:20px 14px 6px; color:var(--sand); font-size:.95rem; font-family:inherit; outline:none;
+  box-sizing:border-box; transition:border-color .3s, box-shadow .3s;
 }
-.form-field textarea{ resize:vertical; min-height:100px; padding-top:20px; }
+.form-field textarea{ height:auto; min-height:100px; resize:vertical; padding-top:22px; }
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus{ border-color:var(--gold); }
 .form-field label{
-  position:absolute; left:14px; top:16px; font-size:.9rem; color:rgba(244,237,225,.55);
-  pointer-events:none; transition:.25s var(--ease); transform-origin:left;
+  position:absolute; left:14px; top:17px; font-size:.88rem; color:rgba(244,237,225,.55);
+  pointer-events:none; transition:.22s var(--ease); transform-origin:left;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:calc(100% - 28px);
 }
 .form-field input:focus + label, .form-field input:not(:placeholder-shown) + label,
 .form-field textarea:focus + label, .form-field textarea:not(:placeholder-shown) + label,
-.form-field select.filled + label{
+.form-field.active label, .form-field.has-value label{
   top:6px; font-size:.68rem; color:var(--gold-light);
 }
-.form-field select{
-  appearance:none; -webkit-appearance:none; color:var(--sand);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23e9c98a' d='M1.41 0L6 4.58L10.59 0L12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 32px;
-  cursor: pointer;
+
+/* Searchable Combobox */
+.combobox-field{ position:relative; }
+.combobox-chevron{
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  width:16px; height:16px; pointer-events:none; color:var(--gold-light);
+  transition:transform .25s var(--ease);
 }
-.form-field select:disabled{ opacity:.5; cursor:not-allowed; }
-.form-field select option{ background:#1c130e; color:var(--sand); padding:8px 12px; }
-.select-label{ top:6px !important; font-size:.68rem !important; color:var(--gold-light) !important; }
+.combobox-field.open .combobox-chevron{ transform:translateY(-50%) rotate(180deg); }
+.combobox-dropdown{
+  position:absolute; left:0; right:0; top:calc(100% + 4px);
+  max-height:220px; overflow-y:auto;
+  background:#160e0a; border:1px solid rgba(217,162,75,0.4); border-radius:10px;
+  z-index:200; box-shadow:0 14px 34px rgba(0,0,0,0.7);
+  display:none; list-style:none; margin:0; padding:6px 0;
+}
+.combobox-field.open .combobox-dropdown{ display:block; }
+.combobox-item{
+  padding:10px 16px; font-size:.9rem; color:var(--sand);
+  cursor:pointer; transition:background .15s, color .15s;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.combobox-item:hover, .combobox-item.active{
+  background:rgba(217,162,75,0.18); color:var(--gold-light);
+}
+.combobox-item.other-item{
+  border-top:1px solid rgba(255,255,255,0.08); font-weight:600; color:var(--gold-light);
+}
+.combobox-dropdown::-webkit-scrollbar{ width:6px; }
+.combobox-dropdown::-webkit-scrollbar-thumb{ background:rgba(217,162,75,0.3); border-radius:3px; }
+.combobox-dropdown::-webkit-scrollbar-track{ background:transparent; }
+
 .form-field.has-error input, .form-field.has-error select, .form-field.has-error textarea{
   border-color:#ff6b6b !important;
   box-shadow:0 0 0 1px #ff6b6b;
