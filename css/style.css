@@ -292,9 +292,15 @@ section{ position:relative; padding:120px 0; scroll-margin-top:80px; }
 }
 .product-card:hover{ transform:translateY(-8px); box-shadow:var(--shadow); }
 .product-visual{
-  height:140px; border-radius:12px; background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
+  height:160px; border-radius:12px; background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.02));
   display:flex; align-items:center; justify-content:center; margin-bottom:20px; overflow:hidden;
+  position:relative; border:1px solid var(--line);
 }
+.product-img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .6s var(--ease);
+}
+.product-card:hover .product-img{ transform:scale(1.06); }
 .brick-3d{ width:88px; height:44px; border-radius:5px; position:relative; transition:transform .5s var(--ease); }
 .product-card:hover .brick-3d{ transform:rotateX(8deg) rotateZ(-3deg) translateY(-4px); }
 .brick-3d.clay{ background:linear-gradient(135deg,#c9663a,#8a3316); box-shadow:0 14px 24px -10px rgba(138,51,22,.6); }
@@ -427,10 +433,10 @@ section{ position:relative; padding:120px 0; scroll-margin-top:80px; }
 }
 .gallery-item span{ position:relative; z-index:1; text-shadow:0 1px 3px rgba(0,0,0,.6); }
 .gallery-item:hover{ transform:scale(1.03); box-shadow:var(--shadow); }
-.g1{ background:url('../assets/IMG_0012.jpeg') center/cover no-repeat; }
-.g2{ background:url('../assets/IMG_0013.jpeg') center/cover no-repeat; }
+.g1{ background:url('../assets/kiln-yard.jpeg') center 30%/cover no-repeat; }
+.g2{ background:url('../assets/raw-brick-stack.jpeg') center 45%/cover no-repeat; }
 .g3{ background:linear-gradient(150deg,#7a2d10,#d9723a); }
-.g4{ background:linear-gradient(150deg,#5c5450,#9a9088); }
+.g4{ background:url('../assets/yellow-soil.jpeg') center 60%/cover no-repeat; }
 .g5{ background:linear-gradient(150deg,#9c3f1a,#e0a95c); }
 
 /* ===================== FAQ ===================== */
